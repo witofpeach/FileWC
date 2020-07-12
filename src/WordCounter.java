@@ -1,3 +1,4 @@
+import java.text.Collator;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Map;
@@ -15,6 +16,7 @@ public class WordCounter {
     }
 
     public void printWordCount() {
+
         Map<String, Long> wordCount = inputStream
                 .map(String::toLowerCase)
                 .map(line -> line.split("[\\p{Punct}\\s]+"))
@@ -25,7 +27,16 @@ public class WordCounter {
 
         wordCount.entrySet().stream()
                 .sorted(Comparator.comparing(Map.Entry::getKey))
-                .sorted(Comparator.comparing((Map.Entry<String, Long> entry) -> entry.getValue()).reversed())
+                .forEach(System.out::println);
+
+
+        System.out.println("\nСлово(слова) встретившиеся максимальное кол-во раз: \n");
+
+        final Long maxCount = wordCount.entrySet().stream().map(Map.Entry::getValue).max(Comparator.comparingLong(Long::longValue)).orElse(Long.MAX_VALUE);
+
+        wordCount.entrySet().stream()
+                .sorted(Comparator.comparing(Map.Entry::getKey))
+                .filter(entry -> entry.getValue().equals(maxCount))
                 .forEach(System.out::println);
     }
 }
